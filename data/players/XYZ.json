@@ -1,0 +1,17 @@
+{
+  "username": "XYZ",
+  "password_hash": "$2a$10$ANpKXPjPJcMzjn41X0kjq.Ej7lCBcHS.MRp1D3BMyYrXGSihZ8LIO",
+  "exp": 1093,
+  "level": 0,
+  "troop_levels": {
+    "Archer": 8,
+    "Dragon": 1,
+    "Giant": 1,
+    "Mage": 1,
+    "Swordman": 13
+  },
+  "tower_levels": {
+    "Guard Tower": 4,
+    "King Tower": 4
+  }
+}

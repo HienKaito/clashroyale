@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Clash Royale Lobby</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <style>
+    /* box-model reset */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f2e394, #d9b382);
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      width: 340px;
+      margin: 100px auto;
+      padding: 20px;
+      background: rgba(255,255,240,0.95);
+      border: 3px solid #d4af37;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .card h1 {
+      margin: 0 0 15px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 2.4em;
+      color: #b31b1b;
+      text-shadow: 2px 2px #000;
+    }
+
+    .info {
+      font-size: 1.1em;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    .join-button {
+      width: 100%;
+      padding: 12px 0;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.1em;
+      color: #fff;
+      background: linear-gradient(to bottom, #00bfff, #1e90ff);
+      border: 2px solid #1e90ff;
+      border-radius: 6px;
+      box-shadow: 0 4px #1c86ee;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .join-button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #1c86ee;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #333;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 1em;
+    }
+    .back-link:hover {
+      color: #b31b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Lobby</h1>
+    <div class="info">Players waiting: {{ .QueueLen }}</div>
+    <form action="/lobby/join" method="POST">
+      <button class="join-button" type="submit">Join Game</button>
+    </form>
+    <a class="back-link" href="/dashboard">← Back to dashboard</a>
+  </div>
+</body>
+</html>

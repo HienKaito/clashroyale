@@ -1,0 +1,53 @@
+[
+    {
+      "name": "Swordman",
+      "hp": 2,
+      "atk": 2,
+      "def": 0,
+      "mana": 1,
+      "exp": 10,
+      "special": "",
+      "level": 1
+    },
+    {
+      "name": "Archer",
+      "hp": 2,
+      "atk": 2,
+      "def": 1,
+      "mana": 2,
+      "exp": 20,
+      "special": "",
+      "level": 1
+    },
+    {
+      "name": "Mage",
+      "hp": 2,
+      "atk": 3,
+      "def": 0,
+      "mana": 3,
+      "exp": 30,
+      "special": "",
+      "level": 1
+    },
+    {
+      "name": "Giant",
+      "hp": 4,
+      "atk": 4,
+      "def": 1,
+      "mana": 4,
+      "exp": 40,
+      "special": "",
+      "level": 1
+    },
+    {
+      "name": "Dragon",
+      "hp": 5,
+      "atk": 5,
+      "def": 2,
+      "mana": 5,
+      "exp": 50,
+      "special": "",
+      "level": 1
+    }
+  ]
+  

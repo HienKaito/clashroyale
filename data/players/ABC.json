@@ -1,0 +1,17 @@
+{
+  "username": "ABC",
+  "password_hash": "$2a$10$UbqYeh8WZapV5VY.HOBf8eDG/BLDIzkqrL/igDS5EAiRNlmstl67.",
+  "exp": 30,
+  "level": 0,
+  "troop_levels": {
+    "Archer": 1,
+    "Dragon": 1,
+    "Giant": 1,
+    "Mage": 1,
+    "Swordman": 1
+  },
+  "tower_levels": {
+    "Guard Tower": 1,
+    "King Tower": 1
+  }
+}

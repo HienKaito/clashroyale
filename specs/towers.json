@@ -1,0 +1,21 @@
+[
+    {
+      "name": "King Tower",
+      "hp": 10,
+      "atk": 3,
+      "def": 3,
+      "crit": 0.1,
+      "exp": 120,
+      "level": 1
+    },
+    {
+      "name": "Guard Tower",
+      "hp": 20,
+      "atk": 2,
+      "def": 1,
+      "crit": 0.05,
+      "exp": 60,
+      "level": 1
+    }
+  ] 
+  

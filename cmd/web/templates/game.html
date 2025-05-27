@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Game {{ .GameID }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <style>
+    /* 1) Box model reset */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* 2) Page & container */
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f2e394, #d9b382);
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(255,255,240,0.95);
+      border: 3px solid #d4af37;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    /* 3) Header */
+    h1 {
+      margin: 0 0 10px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 2.4em;
+      color: #b31b1b;
+      text-shadow: 2px 2px #000;
+      text-align: center;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* 4) Towers layout */
+    .tower-list {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .tower-column {
+      flex: 1;
+    }
+    .tower-column h3 {
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.4em;
+      color: #b31b1b;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px #000;
+    }
+    .tower-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .tower-column li {
+      background: #fff8dc;
+      border: 2px solid #b31b1b;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 6px;
+    }
+
+    /* 5) Hand (troops) */
+    .hand {
+      margin-bottom: 20px;
+    }
+    .hand h3 {
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.4em;
+      color: #b31b1b;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px #000;
+    }
+    .hand-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hand-cards button {
+      flex: 1 1 120px;
+      padding: 8px 12px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1em;
+      background: linear-gradient(to bottom, #FFD700, #FFA500);
+      border: 2px solid #b8860b;
+      border-radius: 6px;
+      box-shadow: 0 4px #804000;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .hand-cards button:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 2px #804000;
+    }
+    .hand-cards button:disabled {
+      background: #ccc;
+      border-color: #aaa;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* 6) Battle log */
+    .battle-log {
+      background: #fff8dc;
+      border: 2px solid #b31b1b;
+      border-radius: 6px;
+      padding: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .battle-log h3 {
+      margin: 0 0 10px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.4em;
+      color: #b31b1b;
+      text-shadow: 1px 1px #000;
+    }
+    .log-entry {
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+    }
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Game {{ .GameID }}</h1>
+    <div class="stats">
+      <div id="time">Time Left: --</div>
+      <div id="mana">Mana: --</div>
+    </div>
+
+    <div id="towers" class="tower-list"></div>
+
+    <div id="hand" class="hand">
+      <h3>Your Hand</h3>
+      <div class="hand-cards"></div>
+    </div>
+
+    <div id="battle-log" class="battle-log">
+      <h3>Battle Log</h3>
+    </div>
+  </div>
+
+  <script>
+    const gameID = "{{ .GameID }}";
+
+    async function fetchState() {
+      const res = await fetch(`/game/${gameID}/state`);
+      const st = await res.json();
+
+      if (st.finished) {
+        document.body.innerHTML = `
+          <div class="container">
+            <h1>Winner: ${st.winner || 'Draw'}</h1>
+            <p style="text-align:center;"><a href="/dashboard">Back to Dashboard</a></p>
+          </div>`;
+        return;
+      }
+
+      // Update timer & mana
+      document.getElementById('time').innerText = `Time Left: ${st.timeLeft}s`;
+      document.getElementById('mana').innerText = `Mana: ${st.yourMana}`;
+
+      // Render towers
+      const towersDiv = document.getElementById('towers');
+      towersDiv.innerHTML = '';
+      const [you, opp] = st.towers;
+      function makeCol(title, list) {
+        const col = document.createElement('div');
+        col.className = 'tower-column';
+        col.innerHTML = `<h3>${title}</h3>`;
+        const ul = document.createElement('ul');
+        list.forEach(t => {
+          const li = document.createElement('li');
+          li.innerText = `${t.name}: HP ${t.hp}`;
+          ul.appendChild(li);
+        });
+        col.appendChild(ul);
+        return col;
+      }
+      towersDiv.appendChild(makeCol('Your Towers', you));
+      towersDiv.appendChild(makeCol('Opponent Towers', opp));
+
+      // Render hand
+      const handCards = document.querySelector('.hand-cards');
+      handCards.innerHTML = '';
+      st.yourHand.forEach(t => {
+        const btn = document.createElement('button');
+        btn.innerText = `${t.name} (Cost ${t.cost})`;
+        btn.disabled = t.cost > st.yourMana;
+        btn.onclick = () => deploy(t.name);
+        handCards.appendChild(btn);
+      });
+
+      // Render battle log
+      const logDiv = document.getElementById('battle-log');
+      // wipe old entries
+      logDiv.querySelectorAll('.log-entry').forEach(el => el.remove());
+      st.battleLog.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.innerText = entry;
+        logDiv.appendChild(div);
+      });
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    async function deploy(troop) {
+      const res = await fetch(`/game/${gameID}/deploy`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: `troop=${encodeURIComponent(troop)}`
+      });
+      const j = await res.json();
+      if (j.error) alert(j.error);
+      fetchState();
+    }
+
+    window.onload = () => {
+      fetchState();
+      setInterval(fetchState, 1000);
+    };
+  </script>
+</body>
+</html>

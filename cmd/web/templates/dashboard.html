@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <style>
+    /* box-model fix */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f2e394, #d9b382);
+      font-family: Arial, sans-serif;
+    }
+
+    /* The Clash Royale “card” container */
+    .card {
+      width: 360px;
+      margin: 80px auto;
+      padding: 20px;
+      background: rgba(255, 255, 240, 0.9);
+      border: 3px solid #d4af37;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .card h1 {
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 2.2em;
+      color: #b31b1b;
+      text-shadow: 2px 2px #000;
+      margin-bottom: 8px;
+    }
+
+    .stats {
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* Buttons at top */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    .button-group button {
+      flex: 1;
+      padding: 10px 0;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1em;
+      color: #fff;
+      background: linear-gradient(to bottom, #00bfff, #1e90ff);
+      border: 2px solid #1e90ff;
+      border-radius: 6px;
+      box-shadow: 0 4px #1c86ee;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .button-group button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #1c86ee;
+    }
+
+    /* Upgrade sections */
+    .upgrade-section {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .upgrade-section h2 {
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.6em;
+      color: #b31b1b;
+      margin-bottom: 12px;
+    }
+
+    .upgrade-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff8dc;
+      border: 2px solid #b31b1b;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .item-info h3 {
+      margin: 0 0 4px;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .item-info p {
+      margin: 2px 0;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .upgrade-button {
+      padding: 6px 12px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1em;
+      color: #333;
+      background: linear-gradient(to bottom, #FFD700, #FFA500);
+      border: 2px solid #b8860b;
+      border-radius: 6px;
+      box-shadow: 0 4px #804000;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .upgrade-button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #804000;
+    }
+    .upgrade-button:disabled {
+      background: #ccc;
+      border-color: #aaa;
+      color: #666;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Welcome, {{ .Username }}</h1>
+    <div class="stats">EXP: {{ .Exp }} • Level: {{ .Level }}</div>
+
+    <div class="button-group">
+      <button onclick="window.location.href='/lobby'">Go to Lobby</button>
+      <button onclick="window.location.href='/logout'">Log Out</button>
+    </div>
+
+    <div class="upgrade-section">
+      <h2>Upgrade Troops</h2>
+      {{ range .Troops }}
+      <div class="upgrade-item">
+        <div class="item-info">
+          <h3>{{ .Name }} (Lvl {{ .Level }})</h3>
+          <p>HP: {{ .HP }} • ATK: {{ .ATK }} • DEF: {{ .DEF }}</p>
+          <p>Cost: {{ .UpgradeCost }} EXP</p>
+        </div>
+        <button class="upgrade-button"
+                onclick="upgradeTroop('{{ .Name }}')"
+                {{ if not .CanUpgrade }}disabled{{ end }}>
+          Upgrade
+        </button>
+      </div>
+      {{ end }}
+    </div>
+
+    <div class="upgrade-section">
+      <h2>Upgrade Towers</h2>
+      {{ range .Towers }}
+      <div class="upgrade-item">
+        <div class="item-info">
+          <h3>{{ .Name }} (Lvl {{ .Level }})</h3>
+          <p>HP: {{ .HP }} • ATK: {{ .ATK }} • DEF: {{ .DEF }}</p>
+          <p>Cost: {{ .UpgradeCost }} EXP</p>
+        </div>
+        <button class="upgrade-button"
+                onclick="upgradeTower('{{ .Name }}')"
+                {{ if not .CanUpgrade }}disabled{{ end }}>
+          Upgrade
+        </button>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+
+  <script>
+    async function upgradeTroop(name) {
+      const res = await fetch('/upgrade/troop', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:`name=${encodeURIComponent(name)}`
+      });
+      if (res.ok) window.location.reload();
+      else alert((await res.json()).error || 'Upgrade failed');
+    }
+    async function upgradeTower(name) {
+      const res = await fetch('/upgrade/tower', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:`name=${encodeURIComponent(name)}`
+      });
+      if (res.ok) window.location.reload();
+      else alert((await res.json()).error || 'Upgrade failed');
+    }
+  </script>
+</body>
+</html>

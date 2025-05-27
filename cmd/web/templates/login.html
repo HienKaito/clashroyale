@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clash Royale Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <style>
+
+    *, *::before, *::after {
+          box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f2e394, #d9b382);
+      font-family: Arial, sans-serif;
+    }
+    .card {
+      width: 320px;
+      margin: 80px auto;
+      padding: 20px;
+      background: rgba(255, 255, 240, 0.9);
+      border: 3px solid #d4af37;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 20px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 2.2em;
+      color: #b31b1b;
+      text-shadow: 2px 2px #000;
+    }
+    .error {
+      color: #c00;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    form label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    form input {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid #b31b1b;
+      border-radius: 6px;
+      background: #fff8dc;
+      font-size: 1em;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 10px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.1em;
+      color: #802000;
+      background: linear-gradient(to bottom, #f4d35e, #d3a625);
+      border: 2px solid #b31b1b;
+      border-radius: 6px;
+      box-shadow: 0 4px #804000;
+      cursor: pointer;
+      transition: transform 0.1s ease-in-out;
+    }
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #804000;
+    }
+    .link {
+      display: block;
+      margin-top: 15px;
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .link:hover {
+      color: #b31b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Login</h1>
+    {{ if .Error }}<div class="error">{{ .Error }}</div>{{ end }}
+    <form method="POST">
+      <label for="username">Username</label>
+      <input id="username" name="username" autocomplete="username"/>
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" autocomplete="current-password"/>
+      <button type="submit">Log In</button>
+    </form>
+    <a class="link" href="/register">No account? Register</a>
+  </div>
+</body>
+</html>
